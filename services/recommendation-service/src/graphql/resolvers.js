@@ -5,6 +5,7 @@ import { Product } from '../models/product.js';
 import { generateRecommendations } from '../algorithms/recommendationEngine.js';
 import { publishRecommendationGenerated } from '../queue/producer.js';
 import { sendRecommendationNotification } from '../controllers/notificationController.js';
+import { Kind } from 'graphql';
 
 export const resolvers = {
   JSON: {
@@ -12,10 +13,25 @@ export const resolvers = {
     serialize: (value) => value,
     parseValue: (value) => value,
     parseLiteral: (ast) => {
-      if (ast.kind === Kind.STRING) {
-        return JSON.parse(ast.value);
+      switch (ast.kind) {
+        case Kind.STRING:
+          return JSON.parse(ast.value);
+        case Kind.INT:
+          return parseInt(ast.value, 10);
+        case Kind.FLOAT:
+          return parseFloat(ast.value);
+        case Kind.BOOLEAN:
+          return ast.value;
+        case Kind.OBJECT:
+          return ast.fields.reduce((obj, field) => {
+            obj[field.name.value] = field.value.value;
+            return obj;
+          }, {});
+        case Kind.LIST:
+          return ast.values.map((value) => value.value);
+        default:
+          return null;
       }
-      return null;
     }
   },
   
