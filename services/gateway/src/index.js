@@ -1,6 +1,7 @@
 // Main entry point for Apollo Gateway
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
+import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -56,7 +57,9 @@ async function startServer() {
   await server.start();
   
   // Apply middleware to Express
-  server.applyMiddleware({ app, path: '/graphql' });
+  app.use('/graphql', expressMiddleware(server, {
+    context: buildContext
+  }));
   
   // Health check endpoint
   app.get('/health', (req, res) => {
