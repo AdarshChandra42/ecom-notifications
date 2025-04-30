@@ -24,7 +24,8 @@ export const responseCachePlugin = {
         // Only cache if it's a query (not mutation)
         if (
           requestContext.operation?.operation === 'query' && 
-          !requestContext.context.user // Don't cache authenticated requests
+          // Safely check if context exists before accessing user
+          (!requestContext.context || !requestContext.context.user)
         ) {
           const cacheKey = generateCacheKey(requestContext);
           const data = requestContext.response.data;

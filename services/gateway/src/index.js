@@ -1,8 +1,8 @@
 // Main entry point for Apollo Gateway
 import express from 'express';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer } from '@apollo/server';
 import { expressMiddleware } from '@apollo/server/express4';
-import { ApolloGateway, RemoteGraphQLDataSource } from '@apollo/gateway';
+import { ApolloGateway, RemoteGraphQLDataSource, IntrospectAndCompose } from '@apollo/gateway';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
@@ -25,7 +25,12 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 
 // Create Apollo Gateway
 const gateway = new ApolloGateway({
-  serviceList,
+  supergraphSdl: new IntrospectAndCompose({
+    subgraphs: serviceList.map(service => ({
+      name: service.name,
+      url: service.url
+    }))
+  }),
   buildService({ name, url }) {
     return new AuthenticatedDataSource({
       url,
@@ -47,11 +52,9 @@ async function startServer() {
   const server = new ApolloServer({
     gateway,
     plugins: [responseCachePlugin],
-    context: buildContext,
     formatError,
-    // Disable introspection and playground in production
-    introspection: process.env.NODE_ENV !== 'production',
-    playground: process.env.NODE_ENV !== 'production'
+    // Only enable introspection in non-production environments
+    introspection: process.env.NODE_ENV !== 'production'
   });
 
   await server.start();
@@ -68,7 +71,7 @@ async function startServer() {
   
   // Start the server
   app.listen(PORT, () => {
-    console.log(`🚀 Gateway ready at http://localhost:${PORT}${server.graphqlPath}`);
+    console.log(`🚀 Gateway ready at http://localhost:${PORT}/graphql`);
   });
 }
 
