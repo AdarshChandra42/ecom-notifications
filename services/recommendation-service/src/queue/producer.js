@@ -1,11 +1,11 @@
 // RabbitMQ event producers
-import { getChannel } from '../config/rabbitmq.js';
+import { createChannel } from '../config/rabbitmq.js';
 
 const EXCHANGE_NAME = 'notification_events';
 
 const publishEvent = async (routingKey, data) => {
   try {
-    const channel = await getChannel();
+    const channel = await createChannel();
     await channel.assertExchange(EXCHANGE_NAME, 'topic', { durable: true });
     
     const message = Buffer.from(JSON.stringify(data));
@@ -17,10 +17,10 @@ const publishEvent = async (routingKey, data) => {
   }
 };
 
-export const publishUserCreated = async (userData) => {
-  await publishEvent('user.created', userData);
+export const publishRecommendationGenerated = async (recommendationData) => {
+  await publishEvent('recommendation.generated', recommendationData);
 };
 
-export const publishPreferencesUpdated = async (userData) => {
-  await publishEvent('user.preferences.updated', userData);
+export const publishUserActivityTracked = async (activityData) => {
+  await publishEvent('user.activity.tracked', activityData);
 };

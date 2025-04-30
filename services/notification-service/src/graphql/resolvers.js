@@ -74,11 +74,26 @@ export const resolvers = {
     }
   },
   
+
   Notification: {
     id: (notification) => notification._id || notification.id,
+    
+    // Add a parsed content field that returns structured data
+    parsedContent: (notification) => {
+      try {
+        if (typeof notification.content === 'string') {
+          return JSON.parse(notification.content);
+        }
+        return notification.content;
+      } catch (error) {
+        console.error('Error parsing notification content:', error);
+        return null;
+      }
+    },
     
     __resolveReference: async (notification) => {
       return await Notification.findById(notification.id);
     }
   }
+
 };

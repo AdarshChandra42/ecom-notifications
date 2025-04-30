@@ -9,6 +9,7 @@ export const typeDefs = gql`
     userId: ID!
     type: NotificationType!
     content: String!
+    parsedContent: NotificationContent
     sentAt: String!
     read: Boolean!
   }
@@ -24,6 +25,31 @@ export const typeDefs = gql`
     type: NotificationType!
     content: String!
   }
+
+  # Union type for different notification content structures
+union NotificationContent = RecommendationContent | OrderUpdateContent | PromotionContent
+
+type RecommendationContent {
+  productId: String!
+  productName: String
+  reason: String
+  message: String
+  imageUrl: String
+  price: Float
+}
+
+type OrderUpdateContent {
+  orderId: String!
+  status: String!
+  message: String
+}
+
+type PromotionContent {
+  title: String!
+  description: String
+  discountPercent: Float
+  expiryDate: String
+}
 
   type Query {
     getNotifications(userId: ID!): [Notification!]!

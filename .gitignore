@@ -6,3 +6,6 @@ services/notification-service/.env
 
 services/recommendation-service/node_modules
 services/recommendation-service/.env
+
+services/gateway/node_modules
+services/gateway/.env

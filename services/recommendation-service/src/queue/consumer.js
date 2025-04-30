@@ -1,9 +1,11 @@
 // RabbitMQ event consumers
 import { createChannel } from '../config/rabbitmq.js';
-import { Notification } from '../models/notification.js';
+import { UserActivity } from '../models/userActivity.js';
+import { PurchaseHistory } from '../models/purchaseHistory.js';
+import { generateRecommendations } from '../algorithms/recommendationEngine.js';
 
-const EXCHANGE_NAME = 'notification_events';     
-const QUEUE_NAME = 'notification_service_queue';
+const EXCHANGE_NAME = 'notification_events';
+const QUEUE_NAME = 'recommendation_service_queue';
 
 export const setupConsumers = async () => {
   try {
@@ -18,8 +20,7 @@ export const setupConsumers = async () => {
     // Bind to relevant events
     await channel.bindQueue(queue, EXCHANGE_NAME, 'user.created');
     await channel.bindQueue(queue, EXCHANGE_NAME, 'user.preferences.updated');
-    await channel.bindQueue(queue, EXCHANGE_NAME, 'recommendation.generated');
-    //should I add promotions and order-updates here? 
+    await channel.bindQueue(queue, EXCHANGE_NAME, 'order.created');
     
     // Set up consumer
     channel.consume(queue, async (msg) => {
@@ -39,8 +40,8 @@ export const setupConsumers = async () => {
           case 'user.preferences.updated':
             await handlePreferencesUpdated(content);
             break;
-          case 'recommendation.generated':
-            await handleRecommendationGenerated(content);
+          case 'order.created':
+            await handleOrderCreated(content);
             break;
         }
         
@@ -61,49 +62,49 @@ export const setupConsumers = async () => {
 
 // Event handlers
 async function handleUserCreated(data) {
-  // Create welcome notification
-  const notification = new Notification({
-    userId: data.id,
-    type: 'promotion',
-    content: `Welcome to our platform, ${data.name}! Explore our products and enjoy shopping.`
-  });
-  
-  await notification.save();
+  // Generate initial recommendations for new users
+  setTimeout(async () => {
+    try {
+      await generateRecommendations(data.id, 3);
+    } catch (error) {
+      console.error('Error generating initial recommendations:', error);
+    }
+  }, 5000);
 }
 
 async function handlePreferencesUpdated(data) {
-  // Optionally create a notification about preferences update
-  const notification = new Notification({
-    userId: data.id,
-    type: 'order_update',
-    content: 'Your notification preferences have been updated.'
-  });
-  
-  await notification.save();
+  // Optionally regenerate recommendations when preferences change
+  if (data.preferences?.recommendations) {
+    try {
+      await generateRecommendations(data.id, 5);
+    } catch (error) {
+      console.error('Error regenerating recommendations after preference update:', error);
+    }
+  }
 }
 
-async function handleRecommendationGenerated(data) {
+async function handleOrderCreated(data) {
   try {
-    // Get product details from data or fetch if needed
-    const content = JSON.stringify({
-      productId: data.productId,
-      score: data.score,
-      reason: data.reason,
-      // The actual product details will be filled in by the recommendation service
-      // or we could fetch them here if needed
-    });
-    
-    // Create notification
-    const notification = new Notification({
+    // Store purchase history
+    const purchase = new PurchaseHistory({
       userId: data.userId,
-      type: 'recommendation',
-      content: content,
-      read: false
+      orderId: data.orderId,
+      products: data.products,
+      totalAmount: data.totalAmount,
+      purchaseDate: new Date()
     });
     
-    await notification.save();
-    console.log(`Created recommendation notification for user ${data.userId}`);
+    await purchase.save();
+    
+    // Generate new recommendations based on purchase
+    setTimeout(async () => {
+      try {
+        await generateRecommendations(data.userId, 3);
+      } catch (error) {
+        console.error('Error generating recommendations after purchase:', error);
+      }
+    }, 3000);
   } catch (error) {
-    console.error('Error processing recommendation event:', error);
+    console.error('Error processing order creation:', error);
   }
 }

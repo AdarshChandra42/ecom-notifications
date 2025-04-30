@@ -12,8 +12,6 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-console.log(process.env.MONGODB_URI);
-
 const app = express();
 const PORT = process.env.PORT || 4001;
 
