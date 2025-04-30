@@ -1,0 +1,8 @@
+services/user-service/node_modules
+services/user-service/.env
+
+services/notification-service/node_modules
+services/notification-service/.env
+
+services/recommendation-service/node_modules
+services/recommendation-service/.env
