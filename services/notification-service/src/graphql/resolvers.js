@@ -7,14 +7,17 @@ export const resolvers = {
     getNotifications: async (_, { userId }) => {
       return await Notification.find({ userId }).sort({ sentAt: -1 });
     },
+    //add auth here
     
     getUnreadNotifications: async (_, { userId }) => {
       return await Notification.find({ userId, read: false }).sort({ sentAt: -1 });
     },
+    //add auth here
     
     getNotification: async (_, { id }) => {
       return await Notification.findById(id);
-    }
+    },
+    //add auth here
   },
   
   Mutation: {
