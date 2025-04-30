@@ -3,22 +3,27 @@ import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { buildSubgraphSchema } from '@apollo/subgraph';
 import { connectDB } from './config/db.js';
+import { setupRabbitMQ } from './config/rabbitmq.js';
 import { typeDefs } from './graphql/schema.js';
 import { resolvers } from './graphql/resolvers.js';
 import { authContext } from './middleware/auth.js';
-import { setupConsumers } from './queue/consumer.js';
+//import { setupConsumers } from './queue/consumer.js';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+console.log(process.env.MONGODB_URI);
 
 const app = express();
 const PORT = process.env.PORT || 4001;
 
 // Connect to MongoDB
-connectDB();
+await connectDB();
+
+await setupRabbitMQ();
 
 // Set up RabbitMQ consumers
-setupConsumers();
+//setupConsumers();
 
 // Create Apollo Server
 const server = new ApolloServer({

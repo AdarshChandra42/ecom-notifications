@@ -1,18 +1,17 @@
-// MongoDB connection configuration
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Set strictQuery to false to prepare for Mongoose 7
-mongoose.set('strictQuery', false);
-
 export const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log('MongoDB connected');
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error('MongoDB connection error:', error.message);
+    console.error(`Error: ${error.message}`);
     process.exit(1);
   }
 };
+
+export default connectDB;
+

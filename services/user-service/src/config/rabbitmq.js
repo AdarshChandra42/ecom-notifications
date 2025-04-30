@@ -1,19 +1,26 @@
-// RabbitMQ connection configuration
-import amqplib from 'amqplib';
-import dotenv from 'dotenv';
+import amqp from 'amqplib';
 
-dotenv.config();
+let channel = null;
 
-let connection = null;
-
-export const getConnection = async () => {
-  if (connection) return connection;
-  
-  connection = await amqplib.connect(process.env.RABBITMQ_URI);
-  return connection;
+export const setupRabbitMQ = async () => {
+  try {
+    const connection = await amqp.connect(process.env.RABBITMQ_URI);
+    channel = await connection.createChannel();
+    
+    // Declare exchange for user events
+    await channel.assertExchange('user-events', 'topic', { durable: true });
+    
+    console.log('Connected to RabbitMQ');
+    return channel;
+  } catch (error) {
+    console.error(`RabbitMQ Connection Error: ${error.message}`);
+    process.exit(1);
+  }
 };
 
-export const createChannel = async () => {
-  const connection = await getConnection();
-  return connection.createChannel();
+export const getChannel = () => {
+  if (!channel) {
+    throw new Error('RabbitMQ channel not initialized');
+  }
+  return channel;
 };
