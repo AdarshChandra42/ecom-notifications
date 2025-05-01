@@ -41,7 +41,7 @@ Communication between services happens through:
 1. GraphQL federation for direct queries/mutations
 2. RabbitMQ for asynchronous event-driven communication
 
-![Diagram](structure.jpg "This shows the architecture diagram")
+![Diagram](structure.JPG "This shows the architecture diagram")
 
 ## 🚀 Service Descriptions
 
