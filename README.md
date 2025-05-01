@@ -205,7 +205,7 @@ The system supports three primary notification types:
 2. Set up each service:
    ```bash
    # Gateway
-   cd services/gateway
+   cd gateway
    npm install
    
    # User Service
@@ -229,7 +229,7 @@ The system supports three primary notification types:
    docker-compose up -d mongodb rabbitmq
    
    # Start each service (in separate terminals)
-   cd services/gateway
+   cd gateway
    npm start
    
    cd services/user-service
@@ -289,8 +289,7 @@ GENERATE_MOCK_DATA=true
 
 ### Project Structure
 ```
-services/
-  ├── gateway/
+ ├── gateway/
   │   ├── src/
   │   │   ├── index.js        # Main entry point
   │   │   ├── config/         # Configuration files
@@ -299,38 +298,39 @@ services/
   │   │   └── utils/          # Utility functions
   │   └── package.json
   │
-  ├── user-service/
-  │   ├── src/
-  │   │   ├── index.js        # Main entry point
-  │   │   ├── config/         # DB and RabbitMQ configuration
-  │   │   ├── graphql/        # Schema and resolvers
-  │   │   ├── models/         # Mongoose models
-  │   │   ├── queue/          # RabbitMQ producers/consumers
-  │   │   └── middleware/     # Auth middleware
-  │   └── package.json
-  │
-  ├── notification-service/
-  │   ├── src/
-  │   │   ├── index.js        # Main entry point
-  │   │   ├── config/         # Configuration files
-  │   │   ├── controllers/    # Notification controllers
-  │   │   ├── graphql/        # Schema and resolvers
-  │   │   ├── models/         # Mongoose models
-  │   │   ├── queue/          # RabbitMQ producers/consumers
-  │   │   └── utils/          # Utility functions
-  │   └── package.json
-  │
-  └── recommendation-service/
-      ├── src/
-      │   ├── index.js        # Main entry point
-      │   ├── algorithms/     # Recommendation algorithms
-      │   ├── config/         # Configuration files
-      │   ├── graphql/        # Schema and resolvers
-      │   ├── models/         # Mongoose models
-      │   ├── queue/          # RabbitMQ producers/consumers
-      │   ├── schedulers/     # Scheduled jobs
-      │   └── utils/          # Utility functions
-      └── package.json
+├── services/
+        ├── user-service/
+        │   ├── src/
+        │   │   ├── index.js        # Main entry point
+        │   │   ├── config/         # DB and RabbitMQ configuration
+        │   │   ├── graphql/        # Schema and resolvers
+        │   │   ├── models/         # Mongoose models
+        │   │   ├── queue/          # RabbitMQ producers/consumers
+        │   │   └── middleware/     # Auth middleware
+        │   └── package.json
+        │
+        ├── notification-service/
+        │   ├── src/
+        │   │   ├── index.js        # Main entry point
+        │   │   ├── config/         # Configuration files
+        │   │   ├── controllers/    # Notification controllers
+        │   │   ├── graphql/        # Schema and resolvers
+        │   │   ├── models/         # Mongoose models
+        │   │   ├── queue/          # RabbitMQ producers/consumers
+        │   │   └── utils/          # Utility functions
+        │   └── package.json
+        │
+        └── recommendation-service/
+            ├── src/
+            │   ├── index.js        # Main entry point
+            │   ├── algorithms/     # Recommendation algorithms
+            │   ├── config/         # Configuration files
+            │   ├── graphql/        # Schema and resolvers
+            │   ├── models/         # Mongoose models
+            │   ├── queue/          # RabbitMQ producers/consumers
+            │   ├── schedulers/     # Scheduled jobs
+            │   └── utils/          # Utility functions
+            └── package.json
 ```
 
 ### API Examples
