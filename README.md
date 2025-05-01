@@ -32,7 +32,7 @@ Communication between services happens through:
 
 ## 🚀 Service Descriptions
 
-### 🌐 API Gateway (Port 4000)
+### 🌐 Unified GraphQL API Gateway 
 
 The Gateway service acts as the entry point for all client requests using Apollo Gateway with GraphQL Federation.
 
@@ -44,7 +44,7 @@ The Gateway service acts as the entry point for all client requests using Apollo
 
 The gateway aggregates schemas from all services to provide a unified GraphQL API to clients.
 
-### 👤 User Service (Port 4001)
+### 👤 User Service 
 
 Manages user accounts, authentication, and notification preferences.
 
@@ -60,7 +60,7 @@ Manages user accounts, authentication, and notification preferences.
 - Notification preferences per channel and type
 - Authentication credentials
 
-### 📣 Notification Service (Port 4002)
+### 📣 Notification Service 
 
 Central hub for processing and delivering notifications to users across different channels.
 
@@ -76,7 +76,7 @@ Central hub for processing and delivering notifications to users across differen
 - Delivery status tracking
 - Notification templates
 
-### 🔮 Recommendation Service (Port 4003)
+### 🔮 Recommendation Service
 
 Generates personalized product recommendations based on user behavior and preferences.
 
