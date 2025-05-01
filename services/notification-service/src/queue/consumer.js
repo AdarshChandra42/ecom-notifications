@@ -19,6 +19,7 @@ export const setupConsumers = async () => {
     await channel.bindQueue(queue, EXCHANGE_NAME, 'user.created');
     await channel.bindQueue(queue, EXCHANGE_NAME, 'user.preferences.updated');
     await channel.bindQueue(queue, EXCHANGE_NAME, 'recommendation.generated');
+    await channel.bindQueue(queue, EXCHANGE_NAME, 'user.purchase');
     //should I add promotions and order-updates here? 
     
     // Set up consumer
@@ -81,6 +82,33 @@ async function handlePreferencesUpdated(data) {
   
   await notification.save();
 }
+
+async function handlePurchase(data) {
+  // Create purchase notification
+  try {
+    const { orderId, products, totalAmount } = data;
+    const productCount = products.length;
+    
+    let notificationContent;
+    if (productCount === 1) {
+      notificationContent = `Your order #${orderId} for ${products[0].quantity} item(s) has been confirmed! Total: $${totalAmount}`;
+    } else {
+      notificationContent = `Your order #${orderId} for ${productCount} different products has been confirmed! Total: $${totalAmount}`;
+    }
+    
+    const notification = new Notification({
+      userId: data.userId,
+      type: 'order_update',
+      content: notificationContent
+    });
+  
+    await notification.save();
+    console.log(`Created purchase notification for user ${data.userId}, order ${orderId}`);
+  } catch (error) {
+    console.error('Error processing purchase event:', error);
+  }
+}
+
 
 async function handleRecommendationGenerated(data) {
   try {
