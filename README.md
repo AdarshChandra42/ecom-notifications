@@ -2,6 +2,8 @@
 
 A microservices-based notification system for e-commerce platforms, enabling targeted and personalized notifications to users based on their preferences, behavior, and recommendations.
 
+Project meant as a submission for assignment task for Backend Intern Role at Pratilipi
+
 ## 📋 Table of Contents
 
 - [System Overview](#-system-overview)
