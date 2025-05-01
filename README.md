@@ -24,7 +24,7 @@ This system provides a comprehensive notification infrastructure for e-commerce 
 
 The system is built on a microservices architecture with the following components:
 
-![Diagram](./images/structure.JPG "This shows the architecture diagram")
+![Diagram](structure.JPG "This shows the architecture diagram")
 
 Communication between services happens through:
 1. GraphQL federation for direct queries/mutations
