@@ -198,8 +198,8 @@ The system supports three primary notification types:
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/AdarshChandra42/ecom-notifs.git](https://github.com/AdarshChandra42/ecom-notifications)
-   cd ecom-notifs
+   git clone https://github.com/AdarshChandra42/ecom-notifications
+   cd ecom-notifications
    ```
 
 2. Set up each service:
