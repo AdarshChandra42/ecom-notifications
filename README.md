@@ -2,6 +2,8 @@
 
 A microservices-based notification system for e-commerce platforms, enabling targeted and personalized notifications to users based on their preferences, behavior, and recommendations.
 
+Project meant as a submission to the assignment task for Backend Intern Role at Pratilipi
+
 ## 📋 Table of Contents
 
 - [System Overview](#-system-overview)
@@ -22,20 +24,7 @@ This system provides a comprehensive notification infrastructure for e-commerce 
 
 The system is built on a microservices architecture with the following components:
 
-```
-┌─────────────┐      ┌──────────────────┐      ┌─────────────────────┐
-│             │      │                  │      │                     │
-│   Gateway   │◄────►│   User Service   │◄────►│ Recommendation      │
-│             │      │                  │      │ Service             │
-└──────┬──────┘      └────────┬─────────┘      └───────────┬─────────┘
-       │                      │                            │
-       │                      │                            │
-       │                      ▼                            │
-       │             ┌──────────────────┐                  │
-       └────────────►│  Notification    │◄─────────────────┘
-                     │  Service         │
-                     └──────────────────┘
-```
+![Diagram](structure.JPG "This shows the architecture diagram")
 
 Communication between services happens through:
 1. GraphQL federation for direct queries/mutations
@@ -43,7 +32,7 @@ Communication between services happens through:
 
 ## 🚀 Service Descriptions
 
-### 🌐 API Gateway (Port 4000)
+### 🌐 Unified GraphQL API Gateway 
 
 The Gateway service acts as the entry point for all client requests using Apollo Gateway with GraphQL Federation.
 
@@ -55,7 +44,7 @@ The Gateway service acts as the entry point for all client requests using Apollo
 
 The gateway aggregates schemas from all services to provide a unified GraphQL API to clients.
 
-### 👤 User Service (Port 4001)
+### 👤 User Service 
 
 Manages user accounts, authentication, and notification preferences.
 
@@ -71,7 +60,7 @@ Manages user accounts, authentication, and notification preferences.
 - Notification preferences per channel and type
 - Authentication credentials
 
-### 📣 Notification Service (Port 4002)
+### 📣 Notification Service 
 
 Central hub for processing and delivering notifications to users across different channels.
 
@@ -87,7 +76,7 @@ Central hub for processing and delivering notifications to users across differen
 - Delivery status tracking
 - Notification templates
 
-### 🔮 Recommendation Service (Port 4003)
+### 🔮 Recommendation Service
 
 Generates personalized product recommendations based on user behavior and preferences.
 
@@ -209,8 +198,8 @@ The system supports three primary notification types:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/ecom-notifs.git
-   cd ecom-notifs
+   git clone https://github.com/AdarshChandra42/ecom-notifications
+   cd ecom-notifications
    ```
 
 2. Set up each service:
@@ -260,32 +249,39 @@ Create `.env` files in each service directory with the following variables:
 ### Gateway Service
 ```
 PORT=4000
+JWT_SECRET= super_secret_key_for_jwt
+USER_SERVICE_URL=http://localhost:4001/graphql
+NOTIFICATION_SERVICE_URL=http://localhost:4002/graphql
+RECOMMENDATION_SERVICE_URL=http://localhost:4003/graphql
+CACHE_TTL=300
 NODE_ENV=development
-JWT_SECRET=your_jwt_secret
+
 ```
 
 ### User Service
 ```
 PORT=4001
 MONGODB_URI=mongodb://localhost:27017/user-service
-RABBITMQ_URI=amqp://localhost
-JWT_SECRET=your_jwt_secret
+RABBITMQ_URI= amqp://guest:guest@localhost:5672/
+JWT_SECRET= super_secret_key_for_jwt
 ```
 
 ### Notification Service
 ```
 PORT=4002
 MONGODB_URI=mongodb://localhost:27017/notification-service
-RABBITMQ_URI=amqp://localhost
-JWT_SECRET=your_jwt_secret
+RABBITMQ_URI=amqp://guest:guest@localhost:5672/
+JWT_SECRET=super_secret_key_for_jwt
 ```
 
 ### Recommendation Service
 ```
 PORT=4003
 MONGODB_URI=mongodb://localhost:27017/recommendation-service
-RABBITMQ_URI=amqp://localhost
-JWT_SECRET=your_jwt_secret
+RABBITMQ_URI= amqp://guest:guest@localhost:5672/
+JWT_SECRET= super_secret_key_for_jwt
+NOTIFICATION_SERVICE_URL=http://localhost:4002/graphql
+USER_SERVICE_URL=http://localhost:4001/graphql
 GENERATE_MOCK_DATA=true
 ```
 
