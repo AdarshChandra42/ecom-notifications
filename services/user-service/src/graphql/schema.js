@@ -27,9 +27,9 @@ export const typeDefs = gql`
   }
 
   input PreferencesInput {
-    promotions: Boolean
-    order_updates: Boolean
-    recommendations: Boolean
+    promotions: Boolean!
+    order_updates: Boolean!
+    recommendations: Boolean!
   }
 
   type AuthPayload {

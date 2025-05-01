@@ -18,6 +18,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 40s
+    volumes:
+    - mongo-data:/data/db
+    - ./docker/mongo/mongod.conf:/etc/mongod.conf
+    - ./docker/mongo/init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js
+    command: ["mongod", "--config", "/etc/mongod.conf"]
 
   # Message Broker
   rabbitmq:
@@ -40,6 +45,10 @@ services:
       timeout: 10s
       retries: 5
       start_period: 40s
+    volumes:
+    - rabbitmq-data:/var/lib/rabbitmq
+    - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+    - ./docker/rabbitmq/enabled_plugins:/etc/rabbitmq/enabled_plugins
 
   # User Service
   user-service:
