@@ -43,8 +43,11 @@ export const typeDefs = gql`
   }
 
   type Mutation {
-    registerUser(input: RegisterUserInput!): AuthPayload
+    registerUser(input: RegisterUserInput!): RegistrationResponse
     loginUser(email: String!, password: String!): AuthPayload
     updatePreferences(preferences: PreferencesInput!): User
+  }
+  type RegistrationResponse{
+    message: String!
   }
 `;

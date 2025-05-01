@@ -19,7 +19,6 @@ export const setupConsumers = async () => {
     
     // Bind to relevant events
     await channel.bindQueue(queue, EXCHANGE_NAME, 'user.created');
-    await channel.bindQueue(queue, EXCHANGE_NAME, 'user.preferences.updated');
     await channel.bindQueue(queue, EXCHANGE_NAME, 'order.created');
     
     // Set up consumer
@@ -36,9 +35,6 @@ export const setupConsumers = async () => {
         switch (routingKey) {
           case 'user.created':
             await handleUserCreated(content);
-            break;
-          case 'user.preferences.updated':
-            await handlePreferencesUpdated(content);
             break;
           case 'order.created':
             await handleOrderCreated(content);
@@ -70,17 +66,6 @@ async function handleUserCreated(data) {
       console.error('Error generating initial recommendations:', error);
     }
   }, 5000);
-}
-
-async function handlePreferencesUpdated(data) {
-  // Optionally regenerate recommendations when preferences change
-  if (data.preferences?.recommendations) {
-    try {
-      await generateRecommendations(data.id, 5);
-    } catch (error) {
-      console.error('Error regenerating recommendations after preference update:', error);
-    }
-  }
 }
 
 async function handleOrderCreated(data) {

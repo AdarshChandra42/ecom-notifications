@@ -26,7 +26,17 @@ await setupRabbitMQ();
 // Create Apollo Server
 const server = new ApolloServer({
   schema: buildSubgraphSchema({ typeDefs, resolvers }),
-  context: authContext
+  context: authContext,
+  formatError: (err) => {
+    // Check for custom statusCode property
+    if (err.originalError && err.originalError.statusCode) {
+      // Set HTTP status code for the response
+      err.extensions.http = { 
+        status: err.originalError.statusCode 
+      };
+    }
+    return err;
+  }
 });
 
 const startServer = async () => {

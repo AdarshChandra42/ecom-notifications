@@ -4,7 +4,7 @@ import { Recommendation } from '../models/recommendation.js';
 import { Product } from '../models/product.js';
 
 // GraphQL client for the notification service
-const NOTIFICATION_SERVICE_URL = process.env.NOTIFICATION_SERVICE_URL || 'http://notification-service:4002/graphql';
+const NOTIFICATION_SERVICE_URL = 'http://localhost:4000/graphql';
 
 export const sendRecommendationNotification = async (recommendationId) => {
   try {
