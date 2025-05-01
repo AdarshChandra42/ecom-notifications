@@ -1,0 +1,357 @@
+{
+	"info": {
+		"_postman_id": "fb2dfe0c-1503-46fc-8f4e-62a343d4905a",
+		"name": "Ecom-Notifs-Assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44020199",
+		"_collection_link": "https://www.postman.com/adarshchandra-4395661/workspace/ecom-notifs-assignment/collection/44020199-fb2dfe0c-1503-46fc-8f4e-62a343d4905a?action=share&source=collection_link&creator=44020199"
+	},
+	"item": [
+		{
+			"name": "USER-SERVICE",
+			"item": [
+				{
+					"name": "CREATE-USER",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation RegisterUser {\r\n  registerUser(input: {\r\n    name: \"user5\"\r\n    email: \"user5@example.com\"\r\n    password: \"password123\"\r\n    preferences: {\r\n      promotions: true\r\n      order_updates: true\r\n      recommendations: true\r\n    }\r\n  }) {\r\n    token\r\n    user {\r\n      id\r\n      name\r\n      email\r\n    }\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "LOGIN-USER",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const jsonData = pm.response.json();\r",
+									"if (jsonData.data && jsonData.data.loginUser && jsonData.data.loginUser.token) {\r",
+									"  pm.environment.set(\"token\", jsonData.data.loginUser.token);\r",
+									"  pm.environment.set(\"userId\", jsonData.data.loginUser.user.id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation LoginUser {\r\n  loginUser(email: \"user5@example.com\", password: \"password123\") {\r\n    token\r\n    user {\r\n      id\r\n      name\r\n      email\r\n      preferences {\r\n        promotions\r\n        order_updates\r\n        recommendations\r\n      }\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UPDATE-PREFERENCES",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation UpdateUserPreferences {\r\n  updatePreferences(preferences: {\r\n    promotions: true,\r\n    order_updates: true,\r\n    recommendations: false\r\n  }) {\r\n    id\r\n    name\r\n    preferences {\r\n      promotions\r\n      order_updates\r\n      recommendations\r\n    }\r\n  }\r\n}",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET-CURRENT-USER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query Me {\r\n  me {\r\n    id\r\n    name\r\n    email\r\n    preferences {\r\n      promotions\r\n      order_updates\r\n      recommendations\r\n    }\r\n    createdAt\r\n    updatedAt\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET-USER-BY-ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetUser($id: ID!) {\r\n  getUser(id: $id) {\r\n    id\r\n    name\r\n    email\r\n    preferences {\r\n      promotions\r\n      order_updates\r\n      recommendations\r\n    }\r\n  }\r\n}\r\n",
+								"variables": "{\r\n  \"id\": \"6812fff42cae7af3c3f7b06c\"\r\n}\r\n"
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "NOTIFICATION-SERVICE",
+			"item": [
+				{
+					"name": "CREATE-NOTIFICATION",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation CreateNotification {\r\n  createNotification(input: {\r\n    userId: \"6811f0b5dd01dda81461e3a9\" \r\n    type: promotion\r\n    content: \"{\\\"title\\\": \\\"Special Offe!!!!!!!!!!\\\", \\\"description\\\": \\\"Get 20% off your next purchase with code TEST20\\\"}\"\r\n  }) {\r\n    id\r\n    userId\r\n    type\r\n    content\r\n    sentAt\r\n    read\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET-ALL-NOTIFICATIONS",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetNotifications {\r\n  getNotifications(userId: \"6811f0b5dd01dda81461e3a9\") {\r\n    id\r\n    type\r\n    content\r\n    sentAt\r\n    read\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MARK-NOTIFICATION-AS-READ",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation MarkAsRead {\r\n  markAsRead(id: \"6811f9e1520bf95775324f3b\") {\r\n    id\r\n    read\r\n    sentAt\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RECOMMENDATION-SERVICE",
+			"item": [
+				{
+					"name": "ADD-USER-ACTIVITY",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation TrackActivity {\r\n  trackUserActivity(input: {\r\n    userId: \"6812d3f7a5b5c1ac849145e3\"\r\n    productId: \"PROD0041\" # Use a product ID from your mock data\r\n    activityType: add_to_cart\r\n    metadata: {\r\n      source: \"homepage\",\r\n      timeSpent: 45\r\n    }\r\n  }) {\r\n    id\r\n    userId\r\n    productId\r\n    activityType\r\n    timestamp\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET-RECOMMENDATIONS",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "query GetRecs {\r\n  getRecommendations(userId: \"6811f0b5dd01dda81461e3a9\", limit: 5) {\r\n    id\r\n    productId\r\n    score\r\n    reason\r\n    product {\r\n      name\r\n      category\r\n      price\r\n    }\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GENERATE-RECOMMENDATIONS",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{auth_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "graphql",
+							"graphql": {
+								"query": "mutation GenerateRecs {\r\n  generateRecommendations(userId: \"6811f0b5dd01dda81461e3a9\") {\r\n    id\r\n    productId\r\n    score\r\n    reason\r\n    createdAt\r\n  }\r\n}\r\n",
+								"variables": ""
+							}
+						},
+						"url": {
+							"raw": "{{gateway_url}}",
+							"host": [
+								"{{gateway_url}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
