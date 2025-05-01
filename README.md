@@ -249,32 +249,39 @@ Create `.env` files in each service directory with the following variables:
 ### Gateway Service
 ```
 PORT=4000
+JWT_SECRET= super_secret_key_for_jwt
+USER_SERVICE_URL=http://localhost:4001/graphql
+NOTIFICATION_SERVICE_URL=http://localhost:4002/graphql
+RECOMMENDATION_SERVICE_URL=http://localhost:4003/graphql
+CACHE_TTL=300
 NODE_ENV=development
-JWT_SECRET=your_jwt_secret
+
 ```
 
 ### User Service
 ```
 PORT=4001
 MONGODB_URI=mongodb://localhost:27017/user-service
-RABBITMQ_URI=amqp://localhost
-JWT_SECRET=your_jwt_secret
+RABBITMQ_URI= amqp://guest:guest@localhost:5672/
+JWT_SECRET= super_secret_key_for_jwt
 ```
 
 ### Notification Service
 ```
 PORT=4002
 MONGODB_URI=mongodb://localhost:27017/notification-service
-RABBITMQ_URI=amqp://localhost
-JWT_SECRET=your_jwt_secret
+RABBITMQ_URI=amqp://guest:guest@localhost:5672/
+JWT_SECRET=super_secret_key_for_jwt
 ```
 
 ### Recommendation Service
 ```
 PORT=4003
 MONGODB_URI=mongodb://localhost:27017/recommendation-service
-RABBITMQ_URI=amqp://localhost
-JWT_SECRET=your_jwt_secret
+RABBITMQ_URI= amqp://guest:guest@localhost:5672/
+JWT_SECRET= super_secret_key_for_jwt
+NOTIFICATION_SERVICE_URL=http://localhost:4002/graphql
+USER_SERVICE_URL=http://localhost:4001/graphql
 GENERATE_MOCK_DATA=true
 ```
 
