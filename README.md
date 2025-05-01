@@ -24,26 +24,11 @@ This system provides a comprehensive notification infrastructure for e-commerce 
 
 The system is built on a microservices architecture with the following components:
 
-```
-┌─────────────┐      ┌──────────────────┐      ┌─────────────────────┐
-│             │      │                  │      │                     │
-│   Gateway   │◄────►│   User Service   │◄────►│ Recommendation      │
-│             │      │                  │      │ Service             │
-└──────┬──────┘      └────────┬─────────┘      └───────────┬─────────┘
-       │                      │                            │
-       │                      │                            │
-       │                      ▼                            │
-       │             ┌──────────────────┐                  │
-       └────────────►│  Notification    │◄─────────────────┘
-                     │  Service         │
-                     └──────────────────┘
-```
+![Diagram](structure.JPG "This shows the architecture diagram")
 
 Communication between services happens through:
 1. GraphQL federation for direct queries/mutations
 2. RabbitMQ for asynchronous event-driven communication
-
-![Diagram](structure.JPG "This shows the architecture diagram")
 
 ## 🚀 Service Descriptions
 
