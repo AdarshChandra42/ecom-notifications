@@ -41,6 +41,8 @@ Communication between services happens through:
 1. GraphQL federation for direct queries/mutations
 2. RabbitMQ for asynchronous event-driven communication
 
+![Diagram](./images/structure.png "This shows the architecture diagram")
+
 ## 🚀 Service Descriptions
 
 ### 🌐 API Gateway (Port 4000)
