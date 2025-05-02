@@ -7,7 +7,7 @@ import { sendRecommendationNotification } from '../controllers/notificationContr
 import { Recommendation } from '../models/recommendation.js';
 
 // GraphQL endpoint for the user service
-const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://user-service:4001/graphql';
+const USER_SERVICE_URL = process.env.USER_SERVICE_URL || 'http://localhost:4001/graphql';
 
 // Set up all cron jobs
 export const setupCronJobs = () => {
